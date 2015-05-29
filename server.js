@@ -5,6 +5,10 @@ var express = require('express');
 var app = express();
 var db = require('./lib/db');
 var config = require('./config.json')[app.get('env')];
+var mongoose = require('mongoose');
+var User = require('./models/user');
+var Note = require('./models/note');
+var routes = require('./routes');
 
 var methodOverride = require('method-override');
 var bodyParser = require('bodt-parser');
@@ -20,6 +24,16 @@ app.use(methodOverride(function (req, res) {
         return method;
     }
 }));
+
+app.use(function (req, res, next) {
+    req.User = User;
+    req.Note = Note;
+    next();
+});
+app.get('/users/:username',routes.user.show);
+app.post('/users', routes.user.create);
+app.patch('/users/:username', routes.users.authenticate, routes.users.update);
+
 
 module.exports = app;
 if(!module.parent) {
