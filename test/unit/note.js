@@ -1,79 +1,81 @@
-/**
- * Created by woaitzy on 2015/5/27 0027.
- */
+"use strict";
+
 var should = require('should');
 var sinon = require('sinon');
 var proxyquire = require('proxyquire');
-var helpers = require('../units/helpers');
-var mongoose = require('mongoose');
+var helpers = require('../utils/helpers');
+var mongoose = helpers.getMongooseStub();
 
-var shouldDefineSchemaProperty =
-    helpers.shouldDefineSchemaProperty.bind(null, mongoose.Schema);
-var shouldRegisterSchema = helpers.shouldRegisterSchema.bind(null,
-    mongoose.model, mongoose.Schema);
-var shouldBeRequired = helpers.shouldBeRequired.bind(null,
-    mongoose.Schema);
+var shouldDefineSchemaProperty = helpers.shouldDefineSchemaProperty.bind(null, mongoose.Schema);
+var shouldRegisterSchema = helpers.shouldRegisterSchema.bind(null, mongoose.model, mongoose.Schema);
+var shouldBeRequired = helpers.shouldBeRequired.bind(null, mongoose.Schema);
 var shouldBeA = helpers.shouldBeA.bind(null, mongoose.Schema);
-var shouldDefaultTo = helpers.shouldDefaultTo.bind(null,
-    mongoose.Schema);
-var shouldBeBetween = helpers.shouldBeBetween.bind(null,
-    mongoose.Schema);
-var shouldValidateThat = helpers.shouldValidateThat.bind(null,
-    mongoose.Schema);
-var shouldLoadPlugin = helpers.shouldLoadPlugin.bind(null,
-    mongoose.Schema);
+var shouldDefaultTo = helpers.shouldDefaultTo.bind(null, mongoose.Schema);
+var shouldBeBetween = helpers.shouldBeBetween.bind(null, mongoose.Schema);
+var shouldValidateThat = helpers.shouldValidateThat.bind(null, mongoose.Schema);
+var shouldLoadPlugin = helpers.shouldLoadPlugin.bind(null, mongoose.Schema);
 
-describe('Note', function () {
+describe('Note', function() {
     var Note, mongooseTimestamp;
-    before(function () {
+
+    before(function() {
         mongooseTimestamp = sinon.stub();
-        Note = proxyquire('../../models/notes', {
+        Note = proxyquire('../../models/note', {
             'mongoose-timestamp': mongooseTimestamp,
             'mongoose': mongoose
         });
     });
 
-    it('should register the Mongoose model', function () {
+    it('should register the Mongoose model', function() {
         shouldRegisterSchema('Note');
     });
-    it('should load the timestamps plugin', function () {
+
+    it('should load the timestamps plugin', function() {
         shouldLoadPlugin(mongooseTimestamp);
     });
 
-    describe('title', function () {
-        it('should be required', function () {
+    describe('title', function() {
+        it('should be required', function() {
             shouldBeRequired('title');
         });
-        it('should be string', function () {
+
+        it('should be a string', function() {
             shouldBeA('title', String);
         });
-        it('should have a length of 3-255 chars', function () {
+
+        it('should have a length of 3-255 chars', function() {
             shouldValidateThat('title', 'isLength', 3, 255);
         });
     });
 
-    describe('description', function () {
-        it('should be required', function () {
+    describe('description', function() {
+        it('should be required', function() {
             shouldBeRequired('description');
         });
-        it('should be string', function () {
+
+        it('should be a string', function() {
             shouldBeA('description', String);
         });
-        it('should have a length of 10-255 chars', function () {
+
+        it('should have a length of 10-255 chars', function() {
             shouldValidateThat('description', 'isLength', 10, 255);
         });
     });
-    describe('userId', function () {
-        it('should be required', function () {
+
+    describe('userId', function() {
+        it('should be required', function() {
             shouldBeRequired('userId');
         });
-        it('should be userId', function () {
-            shouldBeA('userId', mongoose.Schema.ObjectID);
+
+        it('should be an ObjectId', function() {
+            shouldBeA('userId', mongoose.Schema.ObjectId);
         });
-        it('should be reference to the User model', function () {
-            shouldDefineSchemaProperty({userId: {ref: 'User'}});
+
+        it('should reference the User model', function() {
+            shouldDefineSchemaProperty({ userId: { ref: 'User' } });
         });
     });
+
     describe('rating', function() {
         it('should be a number', function() {
             shouldBeA('rating', Number);

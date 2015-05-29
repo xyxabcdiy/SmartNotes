@@ -45,7 +45,7 @@ exports.shouldBeA = function (Schema,property,type) {
 exports.shouldDefaultTo = function (Schema, property, defultValue) {
     var obj = {};
     obj[property] = {
-        defult: defultValue
+        default: defultValue
     };
     exports.shouldDefineSchemaProperty(Schema, obj);
 };
