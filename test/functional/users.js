@@ -17,9 +17,9 @@ describe('User-Routes', function (done) {
     });
     it('should return the user details', function (done) {
         request(app)
-            .get('/user/' + user.username)
+            .get('/users/' + user.username)
             .expect(200)
-            .expect('Content-type', /json/)
+            .expect('Content-Type', /json/)
             .end(function (err, res) {
                 if (err) { throw err; }
                 res.body.should.have.properties('username', 'email',

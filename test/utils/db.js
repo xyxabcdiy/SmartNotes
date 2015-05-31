@@ -8,6 +8,7 @@ var Note = require('../../models/note');
 var User = require('../../models/user');
 var userFixtures = require('../fixtures/users.json');
 var notesFixtures = require('../fixtures/notes.json');
+var mongoose = require('mongoose');
 
 exports.connect = function (callback) {
     db.connect(config.test.mongoUrl, callback);

@@ -11,7 +11,7 @@ var Note = require('./models/note');
 var routes = require('./routes');
 
 var methodOverride = require('method-override');
-var bodyParser = require('bodt-parser');
+var bodyParser = require('body-parser');
 
 db.connect(config.mongoUrl);
 
@@ -30,10 +30,16 @@ app.use(function (req, res, next) {
     req.Note = Note;
     next();
 });
-app.get('/users/:username',routes.user.show);
-app.post('/users', routes.user.create);
+app.get('/users/:username',routes.users.show);
+app.post('/users', routes.users.create);
 app.patch('/users/:username', routes.users.authenticate, routes.users.update);
 
+app.get('/users/:username/notes', routes.notes.showPublic);
+app.get('/notes', routes.users.authenticate, routes.notes.index);
+app.post('/notes', routes.users.authenticate,
+    routes.notes.create);
+app.get('/notes/:id', routes.users.authenticate,
+    routes.notes.show);
 
 module.exports = app;
 if(!module.parent) {
